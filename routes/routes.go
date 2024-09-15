@@ -8,9 +8,9 @@ import (
 )
 
 func SetupRoutes(r *mux.Router) {
-	// Public routes
-	r.HandleFunc("/register", handlers.Register).Methods("POST")
-	r.HandleFunc("/login", handlers.Login).Methods("POST")
+	// Public routes with validation middleware
+	r.HandleFunc("/register", middleware.ValidateUserInput(handlers.Register)).Methods("POST")
+	r.HandleFunc("/login", middleware.ValidateUserInput(handlers.Login)).Methods("POST")
 	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
 
 	// Protected routes
