@@ -9,6 +9,7 @@ import (
 
 func SetupRoutes(r *mux.Router) {
 	// Public routes
+	r.HandleFunc("/register", handlers.Register).Methods("POST")
 	r.HandleFunc("/login", handlers.Login).Methods("POST")
 	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
 

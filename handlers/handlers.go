@@ -11,6 +11,24 @@ type User struct {
 	Password string `json:"password"`
 }
 
+func Register(w http.ResponseWriter, r *http.Request) {
+	var user User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	err = auth.CreateUser(user.Username, user.Password)
+	if err != nil {
+		http.Error(w, "Error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{"message": "User created successfully"})
+}
+
 func Login(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -19,8 +37,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// In a real application, validate the user credentials here
-	if user.Username == "testuser" && user.Password == "password" {
+	if auth.AuthenticateUser(user.Username, user.Password) {
 		token, err := auth.GenerateToken(user.Username)
 		if err != nil {
 			http.Error(w, "Error generating token", http.StatusInternalServerError)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"goLangExpress/database"
 	"goLangExpress/routes"
 	"log"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	database.InitDB()
+
 	r := mux.NewRouter()
 	routes.SetupRoutes(r)
 
